@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRM393 Exam Studio — 300 Câu Trắc Nghiệm Flutter &amp; Dart (ĐH FPT)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <button class="brand" id="brandHomeBtn" type="button" aria-label="Về trang cấu hình bài thi">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M13.5 2L3.5 12L6.6 15.1L19.7 2H13.5Z" fill="#38BDF8"/>
+            <path d="M13.5 11.2L8.2 16.5L13.5 21.8H19.7L14.4 16.5L19.7 11.2H13.5Z" fill="#02569B"/>
+            <path d="M8.2 16.5L11.3 13.4L14.4 16.5L11.3 19.6L8.2 16.5Z" fill="#0175C2"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-title">PRM393 Studio</span>
+          <span class="brand-sub">Flutter &amp; Dart • 9 Chương</span>
+        </span>
+      </button>
+
+      <nav class="nav-tabs" aria-label="Điều hướng chính">
+        <button class="nav-tab active" data-view="setup" type="button">Luyện thi</button>
+        <button class="nav-tab" data-view="chapters" type="button">Ôn 9 chương</button>
+        <button class="nav-tab" data-view="mistakes" type="button">
+          Câu sai &amp; Cờ
+          <span class="nav-badge" id="mistakesBadge">0</span>
+        </button>
+      </nav>
+
+      <div class="topbar-actions">
+        <div class="mastery-pill" title="Số câu đã trả lời đúng ít nhất 1 lần">
+          <span class="mastery-dot"></span>
+          <span id="masteryText">0 / 300 đã nắm</span>
+        </div>
+        <button class="icon-btn" id="themeToggleBtn" type="button" aria-label="Chuyển giao diện sáng tối" title="Sáng / Tối">
+          <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <svg id="themeIconMoon" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <!-- VIEW 1: SETUP / EXAM CONFIGURATOR -->
+    <section id="viewSetup" class="view active">
+      <div class="setup-header">
+        <div>
+          <h1>Ôn thi PRM393 — 300 câu trắc nghiệm tiếng Anh</h1>
+          <p class="subtitle">Bám sát 9 slide FPT Cần Thơ, dạng đề FE/Quizlet, giải thích chi tiết và tùy chỉnh số câu hỏi.</p>
+        </div>
+        <div class="quick-stats">
+          <div class="stat-chip">
+            <span class="stat-val" id="statTotalBank">300</span>
+            <span class="stat-lbl">Tổng ngân hàng</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-val" id="statAttempts">0</span>
+            <span class="stat-lbl">Lượt thi đã làm</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-val" id="statAvgScore">—</span>
+            <span class="stat-lbl">Điểm TB (thang 10)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-grid">
+        <!-- LEFT: CHAPTER SCOPE & FILTERS -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>1. Chọn chương ôn tập</h2>
+              <p class="panel-desc">Chọn toàn bộ 9 chương giống đề FE hoặc lọc riêng các chương bạn muốn cày sâu.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-ghost btn-sm" id="selectAllChBtn" type="button">Chọn tất cả</button>
+              <button class="btn btn-ghost btn-sm" id="clearAllChBtn" type="button">Bỏ chọn</button>
+            </div>
+          </div>
+
+          <div class="chapter-grid" id="chapterGrid"></div>
+
+          <div class="filter-section">
+            <h3>Bộ lọc dạng câu hỏi</h3>
+            <div class="pill-group" id="poolFilterGroup">
+              <button class="pill active" data-filter="all" type="button">Tất cả (<span data-count="all">300</span>)</button>
+              <button class="pill" data-filter="unmastered" type="button">Chưa nắm vững (<span data-count="unmastered">300</span>)</button>
+              <button class="pill" data-filter="trap" type="button">Bẫy thi FPT (<span data-count="trap">0</span>)</button>
+              <button class="pill" data-filter="code" type="button">Câu đọc Code (<span data-count="code">0</span>)</button>
+              <button class="pill" data-filter="wrong" type="button">Câu từng làm sai (<span data-count="wrong">0</span>)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: EXAM COUNT & SETTINGS -->
+        <aside class="panel config-panel">
+          <div class="panel-head">
+            <div>
+              <h2>2. Cấu hình bài thi</h2>
+              <p class="panel-desc">Tùy chỉnh số câu hỏi, chế độ chấm và thời gian.</p>
+            </div>
+          </div>
+
+          <!-- QUESTION COUNT ADJUSTER -->
+          <div class="config-block count-block">
+            <div class="count-header">
+              <label for="questionCountInput" class="config-label">Số câu hỏi muốn làm</label>
+              <div class="count-input-wrap">
+                <input
+                  type="number"
+                  id="questionCountInput"
+                  class="count-number-input"
+                  min="1"
+                  max="300"
+                  value="25"
+                  aria-label="Nhập số câu hỏi"
+                />
+                <span class="count-max-label">/ <span id="availablePoolCount">300</span> câu</span>
+              </div>
+            </div>
+
+            <input
+              type="range"
+              id="questionCountSlider"
+              class="count-slider"
+              min="1"
+              max="300"
+              value="25"
+              aria-label="Thanh trượt số câu hỏi"
+            />
+
+            <div class="preset-row" id="countPresets">
+              <button class="preset-btn" data-count="10" type="button">10 câu</button>
+              <button class="preset-btn active" data-count="25" type="button">25 câu (PT)</button>
+              <button class="preset-btn" data-count="50" type="button">50 câu (FE)</button>
+              <button class="preset-btn" data-count="100" type="button">100 câu</button>
+              <button class="preset-btn" data-count="max" type="button">Tất cả</button>
+            </div>
+            <p class="pool-warning hidden" id="poolWarning">Chưa có câu hỏi nào khớp bộ lọc hiện tại. Hãy chọn ít nhất 1 chương hoặc đổi bộ lọc.</p>
+          </div>
+
+          <!-- MODE SELECTOR -->
+          <div class="config-block">
+            <span class="config-label">Chế độ làm bài</span>
+            <div class="mode-cards">
+              <label class="mode-card active" data-mode="practice">
+                <input type="radio" name="quizMode" value="practice" checked />
+                <span class="mode-title">Luyện tập (Practice)</span>
+                <span class="mode-desc">Xem đúng/sai và giải thích ngay sau mỗi câu.</span>
+              </label>
+              <label class="mode-card" data-mode="exam">
+                <input type="radio" name="quizMode" value="exam" />
+                <span class="mode-title">Thi thử (Exam SEB)</span>
+                <span class="mode-desc">Tính giờ đếm ngược, ẩn đáp án đến khi nộp bài.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- TIMER SETTING (for Exam Mode) -->
+          <div class="config-block hidden" id="timerConfigBlock">
+            <label for="timerSelect" class="config-label">Giới hạn thời gian</label>
+            <select id="timerSelect" class="select-input">
+              <option value="auto">Tự động chuẩn FPT (1.2 phút / câu)</option>
+              <option value="30">30 phút (chuẩn Progress Test)</option>
+              <option value="60">60 phút (chuẩn Final Exam)</option>
+              <option value="0">Không giới hạn thời gian</option>
+            </select>
+          </div>
+
+          <!-- TOGGLES -->
+          <div class="config-block toggle-list">
+            <label class="toggle-row">
+              <span>Trộn ngẫu nhiên thứ tự câu hỏi</span>
+              <input type="checkbox" id="shuffleQuestionsToggle" checked />
+            </label>
+            <label class="toggle-row">
+              <span>Trộn thứ tự đáp án A / B / C / D</span>
+              <input type="checkbox" id="shuffleOptionsToggle" checked />
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-lg full-width" id="startQuizBtn" type="button">
+            Bắt đầu làm bài (25 câu)
+          </button>
+
+          <div class="config-footer">
+            <button class="link-btn" id="resetProgressBtn" type="button">Đặt lại lịch sử tiến độ</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- VIEW 2: ACTIVE QUIZ WORKSPACE -->
+    <section id="viewQuiz" class="view">
+      <div class="quiz-layout">
+        <div class="quiz-main panel">
+          <div class="quiz-meta-bar">
+            <div class="quiz-meta-left">
+              <span class="q-counter" id="qCounter">Câu 1 / 25</span>
+              <span class="ch-tag" id="qChapterTag">Ch.1</span>
+              <span class="topic-tag" id="qTopicTag">Topic</span>
+              <span class="special-tag hidden" id="qSpecialTag">Exam Trap</span>
+            </div>
+            <button class="flag-btn" id="flagBtn" type="button" title="Cắm cờ xem lại (Phím F)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
+              </svg>
+              <span id="flagBtnText">Cắm cờ</span>
+            </button>
+          </div>
+
+          <div class="question-body">
+            <h2 class="question-stem" id="questionStem"></h2>
+            <pre class="code-block hidden" id="questionCodeWrap"><code id="questionCode"></code></pre>
+            <div class="options-list" id="optionsList" role="radiogroup" aria-label="Các lựa chọn trả lời"></div>
+          </div>
+
+          <div class="explanation-box hidden" id="explanationBox">
+            <div class="explanation-head" id="explanationHead"></div>
+            <p class="explanation-text" id="explanationText"></p>
+          </div>
+
+          <div class="quiz-nav-footer">
+            <button class="btn btn-secondary" id="prevQBtn" type="button">Câu trước</button>
+            <span class="shortcut-hint">Phím tắt: A–D / 1–4 chọn • ← / → chuyển câu • F cắm cờ</span>
+            <button class="btn btn-primary" id="nextQBtn" type="button">Câu tiếp theo</button>
+          </div>
+        </div>
+
+        <aside class="quiz-sidebar">
+          <div class="panel sidebar-card">
+            <div class="timer-row">
+              <div>
+                <span class="sidebar-label" id="timerModeLabel">Thời gian còn lại</span>
+                <div class="timer-display" id="timerDisplay">30:00</div>
+              </div>
+              <span class="mode-pill" id="activeModePill">Practice</span>
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-labels">
+                <span>Tiến độ làm bài</span>
+                <strong id="answeredProgressText">0 / 25</strong>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="answeredProgressFill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="qmap-section">
+              <div class="qmap-head">
+                <span class="sidebar-label">Danh sách câu hỏi</span>
+                <span class="qmap-flag-count" id="flaggedCountLabel">0 cắm cờ</span>
+              </div>
+              <div class="qmap-grid" id="qmapGrid"></div>
+              <div class="qmap-legend">
+                <span><i class="dot dot-current"></i>Đang xem</span>
+                <span><i class="dot dot-answered"></i>Đã làm</span>
+                <span><i class="dot dot-flagged"></i>Cắm cờ</span>
+              </div>
+            </div>
+
+            <div class="sidebar-actions">
+              <button class="btn btn-primary full-width" id="submitQuizBtn" type="button">Nộp bài &amp; Chấm điểm</button>
+              <button class="btn btn-ghost full-width" id="exitQuizBtn" type="button">Thoát về cấu hình</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- VIEW 3: RESULTS & DETAILED REVIEW -->
+    <section id="viewResults" class="view">
+      <div class="results-top panel">
+        <div class="score-hero">
+          <div class="score-ring-wrap">
+            <svg class="score-ring" viewBox="0 0 120 120" width="128" height="128">
+              <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+              <circle class="ring-fg" id="scoreRingFg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+            </svg>
+            <div class="score-center">
+              <span class="score-ten" id="resScoreTen">0.0</span>
+              <span class="score-sub">/ 10 điểm</span>
+            </div>
+          </div>
+
+          <div class="score-details">
+            <span class="pass-badge" id="resPassBadge">Đạt chuẩn FPT (≥ 5.0)</span>
+            <h2 id="resHeadline">Hoàn thành bài thi!</h2>
+            <p class="subtitle" id="resSummaryLine"></p>
+            <div class="btn-row result-actions">
+              <button class="btn btn-primary" id="retryWrongBtn" type="button">Làm lại các câu sai</button>
+              <button class="btn btn-secondary" id="newQuizBtn" type="button">Cấu hình đề mới</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="breakdown-panel">
+          <h3>Độ chính xác theo từng chương</h3>
+          <div class="breakdown-list" id="chapterBreakdownList"></div>
+        </div>
+      </div>
+
+      <div class="review-section panel">
+        <div class="panel-head">
+          <h2>Xem lại chi tiết từng câu</h2>
+          <div class="pill-group" id="reviewFilterGroup">
+            <button class="pill active" data-rfilter="all" type="button">Tất cả</button>
+            <button class="pill" data-rfilter="wrong" type="button">Câu sai</button>
+            <button class="pill" data-rfilter="correct" type="button">Câu đúng</button>
+            <button class="pill" data-rfilter="flagged" type="button">Đã cắm cờ</button>
+          </div>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: 9 CHAPTERS CHEAT SHEET -->
+    <section id="viewChapters" class="view">
+      <div class="setup-header">
+        <div>
+          <h1>Tóm tắt trọng tâm 9 chương PRM393</h1>
+          <p class="subtitle">Ghi nhớ nhanh các thuật ngữ tiếng Anh, quy tắc và bẫy hay ra thi của từng slide trước khi bấm luyện tập.</p>
+        </div>
+        <div class="search-wrap">
+          <input type="search" id="chapterSearchInput" class="text-input" placeholder="Tìm nhanh từ khóa (VD: FutureBuilder, sqflite, microtask)..." />
+        </div>
+      </div>
+      <div class="cheatsheet-grid" id="cheatsheetGrid"></div>
+    </section>
+
+    <!-- VIEW 5: MISTAKES & BOOKMARKS BANK -->
+    <section id="viewMistakes" class="view">
+      <div class="setup-header">
+        <div>
+          <h1>Ngân hàng câu hay sai &amp; Đã cắm cờ</h1>
+          <p class="subtitle">Hệ thống tự động lưu các câu bạn làm sai hoặc cắm cờ để ôn lại đến khi chắc ăn 100%.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="practiceMistakesBtn" type="button">Luyện ngay danh sách này</button>
+          <button class="btn btn-ghost" id="clearMistakesBtn" type="button">Xóa danh sách sai</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="pill-group" id="mistakeTabGroup">
+            <button class="pill active" data-mtab="wrong" type="button">Câu từng sai (<span id="mCountWrong">0</span>)</button>
+            <button class="pill" data-mtab="flagged" type="button">Câu đã cắm cờ (<span id="mCountFlagged">0</span>)</button>
+          </div>
+        </div>
+        <div id="mistakesList" class="review-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CLEAN IN-APP CONFIRM MODAL -->
+  <div class="modal-backdrop hidden" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <h3 id="modalTitle">Xác nhận</h3>
+      <p id="modalBody"></p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modalCancelBtn" type="button">Hủy</button>
+        <button class="btn btn-primary" id="modalConfirmBtn" type="button">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA SCRIPTS (works 100% offline via file:// without CORS errors) -->
+  <script src="data/chapters.js"></script>
+  <script src="data/ch1.js"></script>
+  <script src="data/ch2.js"></script>
+  <script src="data/ch3.js"></script>
+  <script src="data/ch4.js"></script>
+  <script src="data/ch5.js"></script>
+  <script src="data/ch6.js"></script>
+  <script src="data/ch7.js"></script>
+  <script src="data/ch8.js"></script>
+  <script src="data/ch9.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
